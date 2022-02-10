@@ -15,7 +15,8 @@ const accessPassword = process.env.ACCESS_PASSWORD;
 
 let baseUrl = process.env.BASE_URL;
 
-const loginUrl = `${baseUrl}wp-json/jwt-auth/v1/token`;
+// const loginUrl = `${baseUrl}wp-json/jwt-auth/v1/token`;
+const loginUrl = `${baseUrl}?rest_route=/simple-jwt-login/v1/auth`;
 
 baseUrl = `${baseUrl}wp-json/wp/v2/`;
 
@@ -60,15 +61,14 @@ const createAccount = catchAsync(async (req, res, next) => {
 
             const { data, message } = mainData;
 
-            if(!data || data != null || data == undefined) {
-                res.status(StatusCodes.CREATED).json({
-                    status: "success",
-                    data: buildUserResource(mainData)
-                });
-            }
-            else {
+            if (data == null) {
                 return next(new AppError(`${message}`, StatusCodes.BAD_REQUEST));
             }
+
+            res.status(StatusCodes.CREATED).json({
+                status: "success",
+                data: buildUserResource(mainData)
+            });
 
         }).catch((err) => {
             return next(new AppError(`${err}`, StatusCodes.INTERNAL_SERVER_ERROR));
@@ -110,15 +110,19 @@ const loginUser = catchAsync(async (req, res, next) => {
 
             const { data, message } = mainData;
 
-            if(!data || data != null || data == undefined) {
-                res.status(StatusCodes.OK).json({
-                    status: "success",
-                    data: mainData
-                });
-            }
-            else {
+            if (data == null) {
                 return next(new AppError(`${message}`, StatusCodes.BAD_REQUEST));
             }
+
+            const { jwt } = mainData.data;
+
+            res.status(StatusCodes.OK).json({
+                status: "success",
+                data: {
+                    jwt: jwt
+                }
+            });
+
 
         }).catch((err) => {
             return next(new AppError(`${err}`, StatusCodes.INTERNAL_SERVER_ERROR));

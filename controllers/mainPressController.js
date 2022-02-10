@@ -18,13 +18,15 @@ const consumerKey = process.env.CONSUMER_KEY;
 const consumerSecret = process.env.CONSUMER_SECRET;
 const baseUrl = process.env.BASE_URL;
 
+const bearerAccess = process.env.BASIC_BEARER;
+
 const perPage = process.env.PER_PAGE;
 
 const api = new WooCommerceRestApi({
     url: baseUrl,
     consumerKey: consumerKey,
     consumerSecret: consumerSecret,
-    version: "wc/v3"
+    version: "wc/v3",
 });
 
 const doSomethingDiff = catchAsync(async (req, res, next) => {
@@ -45,6 +47,7 @@ const listProducts = catchAsync(async (req, res, next) => {
         });
 
     }).catch((error) => {
+        console.log(error);
         return next(new AppError(`${error}`, StatusCodes.INTERNAL_SERVER_ERROR));
     });
     // console.log("Showing ", products);
