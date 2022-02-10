@@ -13,7 +13,7 @@ require("dotenv").config();
 
 const router = express.Router();
 
-router.route("/users").post(doSomethingDiff);
+router.route("/calls").post(doSomethingDiff);
 
 router.route("/products").get(listProducts);
 router.route("/products/:product_id").get(listProduct);

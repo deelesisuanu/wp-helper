@@ -53,7 +53,7 @@ app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 
-app.use(formidableMiddleware());
+// app.use(formidableMiddleware());
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
@@ -75,7 +75,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/v1/wp", wp);
-// app.use("/api/v1/auth", auth);
+app.use("/api/v1/auth", auth);
 
 // cron.schedule("0 0 0 * * *", cronHandler);
 

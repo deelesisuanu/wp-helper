@@ -59,9 +59,24 @@ const buildProductCollection = (products) => {
 
 };
 
+const buildUserResource = (user) => {
+
+    const { 
+        id, username, name, first_name, last_name,
+        email, nickname, registered_date, roles,
+    } = user;
+
+    return { 
+        id, username, name, first_name, last_name,
+        email, nickname, registered_date, roles,
+    };
+
+};
+
 module.exports = {
     buildProductCollection,
     buildProductResources,
     buildProductVariantCollection,
-    buildProductVariantResources
+    buildProductVariantResources,
+    buildUserResource
 };
