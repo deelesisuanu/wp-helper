@@ -4,12 +4,12 @@ Helper Node API Wrapper For WordPress. Clone and use for your project
 
 ## Plugins Needed in Wordpress
 
-  * [Custom API for WP](#)
-  * [JSON API](#)
-  * [JSON API Auth](#)
-  * [JSON Basic Authentication](#)
-  * [Simple-JWT-Login - For Loggin in](#)
-  * [WP REST Cache](#)
+  * [Custom API for WP](https://wordpress.org/plugins/custom-api-for-wp/)
+  * [JSON API](https://wordpress.org/plugins/json-api/)
+  * [JSON API Auth](https://wordpress.org/plugins/json-api-auth/)
+  * [JSON Basic Authentication](https://github.com/WP-API/Basic-Auth)
+  * [Simple-JWT-Login - For Loggin in](https://wordpress.org/plugins/simple-jwt-login/)
+  * [WP REST Cache](https://wordpress.org/plugins/wp-rest-cache/)
 
 ### Examples
 
