@@ -3,7 +3,6 @@ const catchAsync = require("../utils/catchAsync");
 
 const Joi = require("joi");
 const { StatusCodes } = require("http-status-codes");
-require("dotenv").config();
 
 const fs = require("fs");
 
@@ -12,22 +11,7 @@ const {
     buildProductVariantCollection, buildProductVariantResources
  } = require("../utils/functions");
 
-const WooCommerceRestApi = require("@reformosoftware/woocommerce-rest-api").default;
-
-const consumerKey = process.env.CONSUMER_KEY;
-const consumerSecret = process.env.CONSUMER_SECRET;
-const baseUrl = process.env.BASE_URL;
-
-const bearerAccess = process.env.BASIC_BEARER;
-
-const perPage = process.env.PER_PAGE;
-
-const api = new WooCommerceRestApi({
-    url: baseUrl,
-    consumerKey: consumerKey,
-    consumerSecret: consumerSecret,
-    version: "wc/v3",
-});
+const { api, perPage } = require("../utils/woo-commerce");
 
 const doSomethingDiff = catchAsync(async (req, res, next) => {
 
@@ -38,7 +22,6 @@ const doSomethingDiff = catchAsync(async (req, res, next) => {
 
 const listProducts = catchAsync(async (req, res, next) => {
 
-    // /products
     api.get("products", { per_page: perPage }).then((response) => {
 
         res.status(StatusCodes.OK).json({
@@ -50,7 +33,6 @@ const listProducts = catchAsync(async (req, res, next) => {
         console.log(error);
         return next(new AppError(`${error}`, StatusCodes.INTERNAL_SERVER_ERROR));
     });
-    // console.log("Showing ", products);
 });
 
 const listProduct = catchAsync(async (req, res, next) => {

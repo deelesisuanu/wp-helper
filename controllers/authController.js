@@ -5,20 +5,15 @@ const Joi = require("joi");
 const { StatusCodes } = require("http-status-codes");
 require("dotenv").config();
 
-var fetch = require('node-fetch');
+const fetch = require('node-fetch');
 
-const { buildUserResource } = require("../utils/functions");
+const { buildUserResource, buildUserInfoResource } = require("../utils/functions");
 
+const { accessPassword, accessUsername, baseUrl } = require("../utils/woo-commerce");
 
-const accessUsername = process.env.ACCESS_USERNAME;
-const accessPassword = process.env.ACCESS_PASSWORD;
-
-let baseUrl = process.env.BASE_URL;
-
-// const loginUrl = `${baseUrl}wp-json/jwt-auth/v1/token`;
 const loginUrl = `${baseUrl}?rest_route=/simple-jwt-login/v1/auth`;
 
-baseUrl = `${baseUrl}wp-json/wp/v2/`;
+const baseUrlPresent = `${baseUrl}wp-json/wp/v2/`;
 
 const createAccount = catchAsync(async (req, res, next) => {
 
@@ -44,7 +39,7 @@ const createAccount = catchAsync(async (req, res, next) => {
         last_name: last_name
     }
 
-    fetch(`${baseUrl}users`, {
+    fetch(`${baseUrlPresent}users`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -107,20 +102,49 @@ const loginUser = catchAsync(async (req, res, next) => {
             return data.text();
         }).then((val) => {
 
-            const mainData = JSON.parse(val);
+            const external_mainData = JSON.parse(val);
 
-            const { jwt, message } = mainData.data;
-            
+            const { jwt, message } = external_mainData.data;
+
             if (jwt == undefined) {
                 return next(new AppError(`${message}`, StatusCodes.BAD_REQUEST));
             }
             else {
-                res.status(StatusCodes.OK).json({
-                    status: "success",
-                    data: {
-                        jwt: jwt
-                    }
-                });
+
+                fetch(`${baseUrlPresent}users/?search=${username}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'content-type': 'application/json',
+                        'Authorization': 'Basic ' + Buffer.from(accessUsername + ":" + accessPassword).toString('base64')
+                    },
+                })
+                    .then((data) => {
+                        return data.text();
+                    }).then((val) => {
+
+                        const mainData = JSON.parse(val);
+
+                        const { data, message } = mainData[0];
+
+                        if (message != undefined) {
+                            return next(new AppError(`${message}`, StatusCodes.BAD_REQUEST));
+                        }
+                        else {
+
+                            res.status(StatusCodes.OK).json({
+                                status: "success",
+                                data: {
+                                    user: buildUserInfoResource(mainData[0]),
+                                    jwt: jwt
+                                }
+                            });
+                        }
+
+                    }).catch((err) => {
+                        return next(new AppError(`${err}`, StatusCodes.INTERNAL_SERVER_ERROR));
+                    });
+
             }
 
         }).catch((err) => {

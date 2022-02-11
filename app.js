@@ -19,6 +19,9 @@ const globalErrorHandler = require("./controllers/errorController");
 
 const wp = require("./routes/wpRoutes");
 const auth = require("./routes/authRoutes");
+const user = require("./routes/userRoutes");
+const misc = require("./routes/miscRoutes");
+const order = require("./routes/orderRoutes");
 
 const app = express();
 
@@ -76,6 +79,9 @@ app.use((req, res, next) => {
 
 app.use("/api/v1/wp", wp);
 app.use("/api/v1/auth", auth);
+app.use("/api/v1/user", user);
+app.use("/api/v1/misc", misc);
+app.use("/api/v1/order", order);
 
 // cron.schedule("0 0 0 * * *", cronHandler);
 
