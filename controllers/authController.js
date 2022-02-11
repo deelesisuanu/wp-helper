@@ -61,14 +61,15 @@ const createAccount = catchAsync(async (req, res, next) => {
 
             const { data, message } = mainData;
 
-            if (data == null) {
+            if (message != undefined) {
                 return next(new AppError(`${message}`, StatusCodes.BAD_REQUEST));
             }
-
-            res.status(StatusCodes.CREATED).json({
-                status: "success",
-                data: buildUserResource(mainData)
-            });
+            else {
+                res.status(StatusCodes.CREATED).json({
+                    status: "success",
+                    data: buildUserResource(mainData)
+                });
+            }
 
         }).catch((err) => {
             return next(new AppError(`${err}`, StatusCodes.INTERNAL_SERVER_ERROR));
@@ -108,21 +109,22 @@ const loginUser = catchAsync(async (req, res, next) => {
 
             const mainData = JSON.parse(val);
 
+            console.log(mainData);
+
             const { data, message } = mainData;
 
-            if (data == null) {
+            if (message != undefined) {
                 return next(new AppError(`${message}`, StatusCodes.BAD_REQUEST));
             }
-
-            const { jwt } = mainData.data;
-
-            res.status(StatusCodes.OK).json({
-                status: "success",
-                data: {
-                    jwt: jwt
-                }
-            });
-
+            else {
+                const { jwt } = mainData.data;
+                res.status(StatusCodes.OK).json({
+                    status: "success",
+                    data: {
+                        jwt: jwt
+                    }
+                });
+            }
 
         }).catch((err) => {
             return next(new AppError(`${err}`, StatusCodes.INTERNAL_SERVER_ERROR));
