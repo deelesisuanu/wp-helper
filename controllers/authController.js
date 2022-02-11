@@ -109,15 +109,12 @@ const loginUser = catchAsync(async (req, res, next) => {
 
             const mainData = JSON.parse(val);
 
-            console.log(mainData);
-
-            const { data, message } = mainData;
-
-            if (message != undefined) {
+            const { jwt, message } = mainData.data;
+            
+            if (jwt == undefined) {
                 return next(new AppError(`${message}`, StatusCodes.BAD_REQUEST));
             }
             else {
-                const { jwt } = mainData.data;
                 res.status(StatusCodes.OK).json({
                     status: "success",
                     data: {
