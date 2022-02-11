@@ -4,51 +4,40 @@ Helper Node API Wrapper For WordPress. Clone and use for your project
 
 ## Plugins Needed in Wordpress
 
-  * [Custom API for WP](#getting-started)
-  * [JSON API](#upgrading)
-  * [JSON API Auth](#api-documentation)
-  * [JSON Basic Authentication](#rpc)
-  * [Simple-JWT-Login - For Loggin in](#installation)
-  * [WP REST Cache](#troubleshooting)
+  * [Custom API for WP](#)
+  * [JSON API](#)
+  * [JSON API Auth](#)
+  * [JSON Basic Authentication](#)
+  * [Simple-JWT-Login - For Loggin in](#)
+  * [WP REST Cache](#)
 
 ### Examples
 
-To start the Wallet API service on port 3000:
+Start the Service 
 
 ```sh
-$ blockchain-wallet-service start --port 3000
+$ npm run dev
 ```
 
 ## Development
 
   1. Clone this repo
-  2. Run `yarn --ignore-engines`
-  3. Run `yarn start`
-  4. Dev server is now running on port 3000
-
-If you are developing `blockchain-wallet-client` alongside this module, it is useful to create a symlink to `my-wallet-v3`:
-
-```sh
-$ ln -s ../path/to/my-wallet-v3 node_modules/blockchain-wallet-client
-```
-
-### Testing
-
-```sh
-$ yarn test
-```
+  2. Create .env file with these values from your wp account ( `CONSUMER_KEY`, `CONSUMER_SECRET`, `PER_PAGE`, `BASE_URL`, `ACCESS_USERNAME`, `ACCESS_PASSWORD` )
+  3. Run `npm install`
+  4. Run `npm run dev`
+  5. Dev server is now running on port 5100, you can always change this
 
 ### Configuration
 
-Optional parameters can be configured in a `.env` file:
+Parameters that must be configured in a `.env` file:
 
-  * `PORT` - port number for running dev server (default: `3000`)
-  * `BIND` - ip address to bind the service to (default: `127.0.0.1`)
+  * `CONSUMER_KEY` - Create your Consumer Key from woocommerce API
+  * `CONSUMER_SECRET` - Create your Consumer Secret from woocommerce API
+  * `PER_PAGE` - Set number of data to be retrieved at once default: `10`
+  * `BASE_URL` - Your website url, example: `http://example.com/`
+  * `ACCESS_USERNAME` - A wordpress admin username
+  * `ACCESS_PASSWORD` - A wordpress admin password
 
 ## Deployment
 
-If you want to use blockchain-wallet-service in your UNIX production server, you just have to run:
-
-```sh
-$ nohup blockchain-wallet-service start --port 3000 &
-```
+You can deploy to any service of your choice.
