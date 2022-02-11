@@ -13,13 +13,6 @@ const {
 
 const { api, perPage } = require("../utils/woo-commerce");
 
-const doSomethingDiff = catchAsync(async (req, res, next) => {
-
-    console.log("Starting out");
-    console.log(req.body);
-
-});
-
 const listProducts = catchAsync(async (req, res, next) => {
 
     api.get("products", { per_page: perPage }).then((response) => {
@@ -111,13 +104,51 @@ const getProductVariation = catchAsync(async (req, res, next) => {
 
 });
 
-const getProductCategories = catchAsync(async (req, res, next) => {
+const getCategories = catchAsync(async (req, res, next) => {
 
     api.get(`products/categories`, { per_page: perPage }).then((response) => {
 
+        const categories = response.data.filter((cr) => {
+            delete cr["_links"];
+            return cr;
+        });
+
         res.status(StatusCodes.OK).json({
             status: "success",
-            data: response.data
+            categories,
+        });
+
+    }).catch((error) => {
+        return next(new AppError(`${error}`, StatusCodes.INTERNAL_SERVER_ERROR));
+    });
+
+});
+
+const getProductCategories = catchAsync(async (req, res, next) => {
+
+    const schema = Joi.object().keys({
+        category_id: Joi.number().required()
+    });
+
+    const { error } = schema.validate(req.params);
+
+    if (error) return next(new AppError(`${error.details[0].message}`, StatusCodes.UNPROCESSABLE_ENTITY));
+
+    const { category_id } = req.params;
+
+    api.get(`products`, { per_page: perPage }).then((response) => {
+
+        const products = response.data.filter((cr) => {
+            const fCategories = cr.categories;
+            const searchCategory = fCategories.find((ele) => {
+                return ele.id == category_id
+            })
+            if(searchCategory != undefined) return cr;
+        });
+
+        res.status(StatusCodes.OK).json({
+            status: "success",
+            products: buildProductCollection(products),
         });
 
     }).catch((error) => {
@@ -132,5 +163,5 @@ module.exports = {
     getProductVariations,
     getProductVariation,
     getProductCategories,
-    doSomethingDiff
+    getCategories
 };
