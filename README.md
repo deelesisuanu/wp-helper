@@ -10,6 +10,7 @@ Helper Node API Wrapper For WordPress. Clone and use for your project
   * [JSON Basic Authentication](https://github.com/WP-API/Basic-Auth)
   * [Simple-JWT-Login - For Loggin in](https://wordpress.org/plugins/simple-jwt-login/)
   * [WP REST Cache](https://wordpress.org/plugins/wp-rest-cache/)
+  * [REST API Password Reset with Code](https://ve.wordpress.org/plugins/bdvs-password-reset/)
 
 ### Examples
 
