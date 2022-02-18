@@ -226,8 +226,8 @@ const updateGeneral = catchAsync(async (req, res, next) => {
 const updateGeneralAddress = catchAsync(async (req, res, next) => {
 
     const schema = Joi.object().keys({
-        shipping: Joi.string().required(),
-        billing: Joi.string().required(),
+        shipping: Joi.object().required(),
+        billing: Joi.object().required(),
     });
 
     const { error } = schema.validate(req.body);
