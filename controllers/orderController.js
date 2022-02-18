@@ -109,7 +109,7 @@ const orderById = catchAsync(async (req, res, next) => {
     const { order_id } = req.params;
 
     api.get(`orders/${order_id}`).then((response) => {
-
+        
         const order = response.data;
         delete order["_links"];
 
