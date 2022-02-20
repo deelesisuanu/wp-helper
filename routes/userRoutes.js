@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.route("/users/search/username/:username").get(getUserByUsername);
 router.route("/users/customer/:customer_id").get(getUserByCustomerId)
-    .put(updateGeneralAddressV2);
+    .post(updateGeneralAddressV2);
 
 router.route("/users/customer/billing/:customer_id").put(updateBilling);
 router.route("/users/customer/shipping/:customer_id").put(updateShipping);
