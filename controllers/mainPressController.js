@@ -139,17 +139,6 @@ const getProductCategories = catchAsync(async (req, res, next) => {
 
     api.get(`products/?category=${category_id}`, { per_page: perPage }).then((response) => {
 
-        // const products = response.data.filter((cr) => {
-        //     const fCategories = cr.categories;
-        //     const searchCategory = fCategories.find((ele) => {
-        //         console.log(ele.id == category_id)
-        //         return ele.id == category_id
-        //     })
-        //     if(searchCategory != undefined) return cr;
-        // });
-
-        // console.log(response.data);
-
         res.status(StatusCodes.OK).json({
             status: "success",
             products: buildProductCollection(response.data),
