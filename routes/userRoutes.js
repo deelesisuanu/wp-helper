@@ -2,7 +2,7 @@ const express = require("express");
 
 const {
     getUserByUsername, getUserByCustomerId, updateBilling,
-    updateShipping, updateGeneral, updateGeneralAddress
+    updateShipping, updateGeneral, updateGeneralAddress, updateGeneralAddressV2
 } = require("../controllers/userController");
 
 require("dotenv").config();
@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.route("/users/search/username/:username").get(getUserByUsername);
 router.route("/users/customer/:customer_id").get(getUserByCustomerId)
-    .put(updateGeneralAddress);
+    .put(updateGeneralAddressV2);
 
 router.route("/users/customer/billing/:customer_id").put(updateBilling);
 router.route("/users/customer/shipping/:customer_id").put(updateShipping);

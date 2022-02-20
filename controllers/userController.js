@@ -279,11 +279,91 @@ const updateGeneralAddress = catchAsync(async (req, res, next) => {
 
 });
 
+const updateGeneralAddressV2 = catchAsync(async (req, res, next) => {
+
+    const schema = Joi.object().keys({
+        first_name_billing: Joi.string().required(),
+        last_name_billing: Joi.string().required(),
+        company_billing: Joi.string(),
+        address_1_billing: Joi.string().required(),
+        address_2_billing: Joi.string(),
+        city_billing: Joi.string(),
+        state_billing: Joi.string(),
+        postcode_billing: Joi.string(),
+        country_billing: Joi.string(),
+        email_billing: Joi.string().email(),
+        phone_billing: Joi.string(),
+        first_name_shipping: Joi.string().required(),
+        last_name_shipping: Joi.string().required(),
+        company_shipping: Joi.string(),
+        address_1_shipping: Joi.string().required(),
+        address_2_shipping: Joi.string(),
+        city_shipping: Joi.string(),
+        state_shipping: Joi.string(),
+        postcode_shipping: Joi.string(),
+        country_shipping: Joi.string(),
+    });
+
+    const { error } = schema.validate(req.body);
+
+    if (error) return next(new AppError(`${error.details[0].message}`, StatusCodes.UNPROCESSABLE_ENTITY));
+
+    const { first_name_billing, last_name_billing, company_billing, 
+        address_1_billing, address_2_billing, city_billing, state_billing, 
+        postcode_billing, country_billing, email_billing, phone_billing, 
+        first_name_shipping, last_name_shipping, company_shipping, 
+        address_1_shipping, address_2_shipping, city_shipping, state_shipping, 
+        postcode_shipping, country_shipping } = req.body;
+
+    const { customer_id } = req.params;
+
+    const data = {
+        billing: {
+            first_name: first_name_billing,
+            last_name: last_name_billing,
+            company: company_billing,
+            address_1: address_1_billing,
+            address_2: address_2_billing,
+            city: city_billing,
+            state: state_billing,
+            postcode: postcode_billing,
+            country: country_billing,
+            email: email_billing,
+            phone: phone_billing
+        },
+        shipping: {
+            first_name: first_name_shipping,
+            last_name: last_name_shipping,
+            company: company_shipping,
+            address_1: address_1_shipping,
+            address_2: address_2_shipping,
+            city: city_shipping,
+            state: state_shipping,
+            postcode: postcode_shipping,
+            country: country_shipping,
+        }
+    };
+
+    api.put(`customers/${customer_id}`, data).then((response) => {
+
+        res.status(StatusCodes.OK).json({
+            status: "success",
+            data: buildUserCustomerResource(response.data),
+        });
+
+    }).catch((error) => {
+        console.log(error);
+        return next(new AppError(`${error}`, StatusCodes.INTERNAL_SERVER_ERROR));
+    });
+
+});
+
 module.exports = {
     getUserByUsername,
     getUserByCustomerId,
     updateBilling,
     updateShipping,
     updateGeneral,
-    updateGeneralAddress
+    updateGeneralAddress,
+    updateGeneralAddressV2
 }
