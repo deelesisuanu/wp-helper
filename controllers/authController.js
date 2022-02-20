@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const fetch = require('node-fetch');
 
-const { buildUserResource, buildUserInfoResource } = require("../utils/functions");
+const { buildUserResource, buildUserInfoResource } = require("../utils/resources");
 
 const { accessPassword, accessUsername, baseUrl } = require("../utils/woo-commerce");
 

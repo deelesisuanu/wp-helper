@@ -8,7 +8,7 @@ const fetch = require('node-fetch');
 
 const {
     buildUserInfoResource, buildUserCustomerResource
-} = require("../utils/functions");
+} = require("../utils/resources");
 
 const { api, perPage, accessPassword, accessUsername, baseUrl } = require("../utils/woo-commerce");
 

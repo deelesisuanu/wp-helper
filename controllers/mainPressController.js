@@ -8,8 +8,9 @@ const fs = require("fs");
 
 const { 
     buildProductCollection, buildProductResources,
-    buildProductVariantCollection, buildProductVariantResources
- } = require("../utils/functions");
+    buildProductVariantCollection, buildProductVariantResources, 
+    buildCategoriesCollection
+ } = require("../utils/resources");
 
 const { api, perPage } = require("../utils/woo-commerce");
 
@@ -115,7 +116,7 @@ const getCategories = catchAsync(async (req, res, next) => {
 
         res.status(StatusCodes.OK).json({
             status: "success",
-            categories,
+            categories: buildCategoriesCollection(categories),
         });
 
     }).catch((error) => {

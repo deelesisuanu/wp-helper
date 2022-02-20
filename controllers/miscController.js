@@ -9,7 +9,7 @@ const {
     buildCountriesCollection, buildPaymentsCollection, 
     buildShippingCollection, buildCurrencyCollection,
     buildContinentCollection
-} = require("../utils/functions");
+} = require("../utils/resources");
 
 const paymentMethods = catchAsync(async (req, res, next) => {
     api.get(`payment_gateways`).then((response) => {
