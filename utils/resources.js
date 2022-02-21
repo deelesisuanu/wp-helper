@@ -12,7 +12,7 @@ const buildProductResources = (product) => {
         "product_id": id, "product_name": name, "product_slug": slug, permalink, date_created,
         date_modified, status, description,
         short_description, sku, price, regular_price, sale_price, categories,
-        "product_images": images, price_html, stock_status, "product_owner": store
+        "product_images": images, price_html, stock_status/* , "product_owner": store */
     };
 };
 
