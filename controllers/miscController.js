@@ -1,12 +1,15 @@
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
+const Joi = require("joi");
 const { StatusCodes } = require("http-status-codes");
 
-const { api } = require("../utils/woo-commerce");
+const fetch = require('node-fetch');
 
-const { 
-    buildCountriesCollection, buildPaymentsCollection, 
+const { api, baseUrl, accessPassword, accessUsername } = require("../utils/woo-commerce");
+
+const {
+    buildCountriesCollection, buildPaymentsCollection,
     buildShippingCollection, buildCurrencyCollection,
     buildContinentCollection
 } = require("../utils/resources");
@@ -71,10 +74,90 @@ const currencies = catchAsync(async (req, res, next) => {
     });
 });
 
+const getBalance = catchAsync(async (req, res, next) => {
+    const schema = Joi.object().keys({
+        customer_id: Joi.string().required(),
+    });
+
+    const { error } = schema.validate(req.params);
+
+    if (error) return next(new AppError(`${error.details[0].message}`, StatusCodes.UNPROCESSABLE_ENTITY));
+    
+    const { customer_id } = req.params;
+    const api = `${baseUrl}wp-json/wc/v2/wallet/balance/${customer_id}`;
+
+    fetch(`${api}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+            'Authorization': 'Basic ' + Buffer.from(accessUsername + ":" + accessPassword).toString('base64')
+        },
+    })
+        .then((data) => {
+            return data.text();
+        }).then((val) => {
+
+            res.status(StatusCodes.OK).json({
+                status: "success",
+                message: "Balance retrieved successfully",
+                balance: val
+            });
+
+        }).catch((err) => {
+            return next(new AppError(`${err}`, StatusCodes.INTERNAL_SERVER_ERROR));
+        });
+});
+
+const creditDebitWallet = catchAsync(async (req, res, next) => {
+    const schema = Joi.object().keys({
+        amount: Joi.number().required(),
+        wallet_trans: Joi.string().valid('debit', 'credit').required(),
+    });
+
+    const { error } = schema.validate(req.body);
+
+    if (error) return next(new AppError(`${error.details[0].message}`, StatusCodes.UNPROCESSABLE_ENTITY));
+    
+    const { wallet_trans, amount } = req.body;
+    const { customer_id } = req.params;
+
+    const api = `${baseUrl}wp-json/wc/v2/wallet/${customer_id}`;
+
+    const data = {
+        type: wallet_trans,
+        amount: amount
+    }
+
+    fetch(`${api}`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+            'Authorization': 'Basic ' + Buffer.from(accessUsername + ":" + accessPassword).toString('base64')
+        },
+    })
+        .then((data) => {
+            return data.text();
+        }).then((val) => {
+
+            res.status(StatusCodes.OK).json({
+                status: "success",
+                message: "Balance updated successfully"
+            });
+
+        }).catch((err) => {
+            return next(new AppError(`${err}`, StatusCodes.INTERNAL_SERVER_ERROR));
+        });
+});
+
 module.exports = {
     paymentMethods,
     shippingMethods,
     countries,
     continents,
-    currencies
+    currencies,
+    getBalance,
+    creditDebitWallet
 }
