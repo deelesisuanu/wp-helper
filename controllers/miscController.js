@@ -142,10 +142,17 @@ const creditDebitWallet = catchAsync(async (req, res, next) => {
             return data.text();
         }).then((val) => {
 
-            res.status(StatusCodes.OK).json({
-                status: "success",
-                message: "Balance updated successfully"
-            });
+            var response = val.charAt(0);
+
+            if (response != '2') {
+                return next(new AppError(`cannot update balance, please try again`, StatusCodes.BAD_REQUEST));
+            }
+            else {
+                res.status(StatusCodes.OK).json({
+                    status: "success",
+                    message: "Balance updated successfully"
+                });
+            }
 
         }).catch((err) => {
             return next(new AppError(`${err}`, StatusCodes.INTERNAL_SERVER_ERROR));
